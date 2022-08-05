@@ -4,6 +4,7 @@ import time
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import Http404, HttpResponseNotModified
 from django.test import TestCase
+from django.test.client import RequestFactory
 from django.utils.http import http_date
 
 from filer import settings as filer_settings
@@ -12,10 +13,6 @@ from filer.server.backends.default import DefaultServer
 from filer.server.backends.nginx import NginxXAccelRedirectServer
 from filer.server.backends.xsendfile import ApacheXSendfileServer
 from tests.helpers import create_image
-
-
-class Mock():
-    pass
 
 
 class BaseServerBackendTestCase(TestCase):
@@ -38,14 +35,14 @@ class BaseServerBackendTestCase(TestCase):
 class DefaultServerTestCase(BaseServerBackendTestCase):
     def test_normal(self):
         server = DefaultServer()
-        request = Mock()
+        request = RequestFactory()
         request.META = {}
         response = server.serve(request, self.filer_file)
         self.assertTrue(response.has_header('Last-Modified'))
 
     def test_save_as(self):
         server = DefaultServer()
-        request = Mock()
+        request = RequestFactory()
         request.META = {}
         response = server.serve(request, self.filer_file, save_as=True)
         self.assertEqual(response['Content-Disposition'], 'attachment; filename=testimage.jpg')
@@ -58,14 +55,14 @@ class DefaultServerTestCase(BaseServerBackendTestCase):
 
     def test_not_modified(self):
         server = DefaultServer()
-        request = Mock()
+        request = RequestFactory()
         request.META = {'HTTP_IF_MODIFIED_SINCE': http_date(time.time())}
         response = server.serve(request, self.filer_file)
         self.assertTrue(isinstance(response, HttpResponseNotModified))
 
     def test_missing_file(self):
         server = DefaultServer()
-        request = Mock()
+        request = RequestFactory()
         request.META = {}
         os.remove(self.filer_file.file.path)
         self.assertRaises(Http404, server.serve, *(request, self.filer_file.file))
@@ -80,7 +77,7 @@ class NginxServerTestCase(BaseServerBackendTestCase):
         )
 
     def test_normal(self):
-        request = Mock()
+        request = RequestFactory()
         request.META = {}
         response = self.server.serve(request, self.filer_file)
         headers = dict(response.items())
@@ -94,7 +91,7 @@ class NginxServerTestCase(BaseServerBackendTestCase):
         """
         this backend should not even notice if the file is missing.
         """
-        request = Mock()
+        request = RequestFactory()
         request.META = {}
         os.remove(self.filer_file.file.path)
         response = self.server.serve(request, self.filer_file)
@@ -110,7 +107,7 @@ class XSendfileServerTestCase(BaseServerBackendTestCase):
         self.server = ApacheXSendfileServer()
 
     def test_normal(self):
-        request = Mock()
+        request = RequestFactory()
         request.META = {}
         response = self.server.serve(request, self.filer_file)
         headers = dict(response.items())
@@ -124,7 +121,7 @@ class XSendfileServerTestCase(BaseServerBackendTestCase):
         """
         this backend should not even notice if the file is missing.
         """
-        request = Mock()
+        request = RequestFactory()
         request.META = {}
         os.remove(self.filer_file.file.path)
         response = self.server.serve(request, self.filer_file)
