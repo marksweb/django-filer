@@ -5,7 +5,7 @@ from filer import __version__
 
 
 REQUIREMENTS = [
-    'django>=2.2,<5',
+    'django>=3.2,<5',
     'django-mptt',
     'django-polymorphic',
     'easy-thumbnails[svg]',
@@ -25,17 +25,12 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Framework :: Django',
-    'Framework :: Django :: 2.2',
-    'Framework :: Django :: 3.0',
-    'Framework :: Django :: 3.1',
     'Framework :: Django :: 3.2',
     'Framework :: Django :: 4.0',
     'Framework :: Django CMS',
-    'Framework :: Django CMS :: 3.6',
-    'Framework :: Django CMS :: 3.7',
-    'Framework :: Django CMS :: 3.8',
     'Framework :: Django CMS :: 3.9',
     'Framework :: Django CMS :: 3.10',
+    'Framework :: Django CMS :: 3.11',
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     'Topic :: Software Development',
@@ -59,7 +54,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
-    python_requires='>=3.6',
+    python_requires='>=3.8',
     classifiers=CLASSIFIERS,
     test_suite='tests.settings.run',
 )
