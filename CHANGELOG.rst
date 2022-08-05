@@ -2,6 +2,11 @@
 CHANGELOG
 =========
 
+unreleased
+==========
+
+* Drop support for django <3.2, python <3.8
+
 2.2.2 (2022-08-02)
 ==================
 * Fix #1305: Install django-filer with easy-thumbnail's optional SVG support.
